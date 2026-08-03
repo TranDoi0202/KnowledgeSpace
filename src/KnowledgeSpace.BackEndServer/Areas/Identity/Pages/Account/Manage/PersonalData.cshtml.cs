@@ -2,35 +2,36 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 using System;
 using System.Threading.Tasks;
+using KnowledgeSpace.BackendServer.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using KnowledgeSpace.BackEndServer.Data;
 
-namespace KnowledgeSpace.BackEndServer.Areas.Identity.Pages.Account.Manage;
-
-public class PersonalDataModel : PageModel
+namespace KnowledgeSpace.BackEndServer.Areas.Identity.Pages.Account.Manage
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly ILogger<PersonalDataModel> _logger;
-
-    public PersonalDataModel(
-        UserManager<ApplicationUser> userManager,
-        ILogger<PersonalDataModel> logger)
+    public class PersonalDataModel : PageModel
     {
-        _userManager = userManager;
-        _logger = logger;
-    }
+        private readonly UserManager<User> _userManager;
+        private readonly ILogger<PersonalDataModel> _logger;
 
-    public async Task<IActionResult> OnGet()
-    {
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
+        public PersonalDataModel(
+            UserManager<User> userManager,
+            ILogger<PersonalDataModel> logger)
         {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            _userManager = userManager;
+            _logger = logger;
         }
 
-        return Page();
+        public async Task<IActionResult> OnGet()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            return Page();
+        }
     }
 }
